@@ -1,0 +1,32 @@
+{
+  "name": "@legalassistant/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "tsup src/index.ts --watch --dts --format esm,cjs --out-dir dist",
+    "build": "tsup src/index.ts --dts --format esm,cjs --out-dir dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "prisma": "prisma",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.11",
+    "eslint": "^9.9.0",
+    "prisma": "^5.18.0",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4"
+  }
+}
