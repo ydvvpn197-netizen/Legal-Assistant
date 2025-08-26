@@ -14,3 +14,53 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum LanguageCode {
+  en
+  hi
+}
+
+enum TemplateCategory {
+  NDA
+  RENT_AGREEMENT
+  EMPLOYMENT_OFFER
+  TERMINATION_NOTICE
+  FOUNDERS_AGREEMENT
+  PRIVACY_POLICY
+}
+
+model LegalTemplate {
+  id        String           @id @default(cuid())
+  name      String
+  slug      String           @unique
+  category  TemplateCategory
+  language  LanguageCode     @default(en)
+  bodyMd    String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+enum ChecklistCategory {
+  GST
+  SHOPS_AND_ESTABLISHMENTS
+  LABOR
+}
+
+model ComplianceChecklist {
+  id        String            @id @default(cuid())
+  slug      String            @unique
+  name      String
+  category  ChecklistCategory
+  items     ChecklistItem[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model ChecklistItem {
+  id          String               @id @default(cuid())
+  checklist   ComplianceChecklist  @relation(fields: [checklistId], references: [id])
+  checklistId String
+  text        String
+  guidance    String
+  order       Int                  @default(0)
+}

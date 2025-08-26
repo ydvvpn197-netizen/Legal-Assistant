@@ -3,6 +3,8 @@ import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
 import { env } from './env';
 import { healthRoutes } from './routes/health';
+import { templateRoutes } from './routes/templates';
+import { checklistRoutes } from './routes/checklists';
 import { getPrismaClient } from '@legalassistant/db';
 
 async function start() {
@@ -23,6 +25,8 @@ async function start() {
   }));
 
   await app.register(healthRoutes);
+  await app.register(templateRoutes);
+  await app.register(checklistRoutes);
 
   app.get('/db-check', async () => {
     // Lightweight query; introspects if DB is reachable

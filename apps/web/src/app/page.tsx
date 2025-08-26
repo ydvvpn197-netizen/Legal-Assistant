@@ -15,6 +15,10 @@ export default function HomePage() {
         Start by checking the API health:
         <code style={{ marginLeft: 8 }}>/api/healthz</code>
       </p>
+      <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
+        <a href="/templates" style={{ textDecoration: 'underline' }}>View Templates</a>
+        <a href="/checklists" style={{ textDecoration: 'underline' }}>View Compliance Checklists</a>
+      </div>
     </div>
   );
 }

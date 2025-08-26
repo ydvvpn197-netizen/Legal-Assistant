@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "db:generate": "pnpm -F @legalassistant/db prisma generate",
     "db:migrate": "pnpm -F @legalassistant/db prisma migrate dev",
-    "db:push": "pnpm -F @legalassistant/db prisma db push"
+    "db:push": "pnpm -F @legalassistant/db prisma db push",
+    "db:seed": "pnpm -F @legalassistant/db seed"
   },
   "devDependencies": {
     "prettier": "^3.3.3",

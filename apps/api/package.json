@@ -8,7 +8,8 @@
     "build": "tsup src/server.ts --format esm,cjs --dts --out-dir dist",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "seed": "pnpm -F @legalassistant/db seed"
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
