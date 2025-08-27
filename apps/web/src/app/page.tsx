@@ -18,6 +18,8 @@ export default function HomePage() {
       <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
         <a href="/templates" style={{ textDecoration: 'underline' }}>View Templates</a>
         <a href="/checklists" style={{ textDecoration: 'underline' }}>View Compliance Checklists</a>
+        <a href="/chat" style={{ textDecoration: 'underline' }}>Try Chat</a>
+        <a href="/documents/nda" style={{ textDecoration: 'underline' }}>Generate NDA</a>
       </div>
     </div>
   );

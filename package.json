@@ -12,6 +12,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
+    "postinstall": "pnpm db:generate",
     "db:generate": "pnpm -F @legalassistant/db prisma generate",
     "db:migrate": "pnpm -F @legalassistant/db prisma migrate dev",
     "db:push": "pnpm -F @legalassistant/db prisma db push",
