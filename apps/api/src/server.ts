@@ -1,6 +1,7 @@
 import Fastify from 'fastify';
 import helmet from '@fastify/helmet';
 import cors from '@fastify/cors';
+import multipart from '@fastify/multipart';
 import { env } from './env';
 import { healthRoutes } from './routes/health';
 import { templateRoutes } from './routes/templates';
@@ -9,6 +10,9 @@ import { chatRoutes } from './routes/chat';
 import { authRoutes } from './routes/auth';
 import { documentRoutes } from './routes/documents';
 import { getPrismaClient } from '@legalassistant/db';
+import { auditPlugin } from './plugins/audit';
+import { privacyRoutes } from './routes/privacy';
+import { summariesRoutes } from './routes/summaries';
 
 async function start() {
   const app = Fastify({ logger: true });
@@ -18,6 +22,8 @@ async function start() {
     origin: true,
     credentials: true
   });
+  await app.register(multipart);
+  await app.register(auditPlugin);
 
   // DB test route
   const prisma = getPrismaClient();
@@ -33,6 +39,8 @@ async function start() {
   await app.register(chatRoutes);
   await app.register(authRoutes);
   await app.register(documentRoutes);
+  await app.register(privacyRoutes);
+  await app.register(summariesRoutes);
 
   app.get('/db-check', async () => {
     // Lightweight query; introspects if DB is reachable

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ClientChecklist from './ClientChecklist';
 
 async function fetchChecklist(slug: string) {
   const res = await fetch(`http://localhost:3000/api/checklists/${slug}`, { cache: 'no-store' });
@@ -12,14 +13,7 @@ export default async function ChecklistDetail({ params }: { params: { slug: stri
     <div>
       <p><Link href="/checklists">← Back</Link></p>
       <h2>{checklist.name}</h2>
-      <ol>
-        {checklist.items.map((i: any) => (
-          <li key={i.id}>
-            <strong>{i.text}</strong>
-            <div style={{ color: '#555' }}>{i.guidance}</div>
-          </li>
-        ))}
-      </ol>
+      <ClientChecklist items={checklist.items} />
     </div>
   );
 }

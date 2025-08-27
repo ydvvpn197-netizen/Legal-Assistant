@@ -43,7 +43,13 @@ pnpm db:generate
 pnpm db:push
 ```
 
-5. Run development servers:
+5. (Optional) Ingest sample RAG source:
+
+```bash
+pnpm -F @legalassistant/api ingest -- --slug contract-act --title "Indian Contract Act excerpt" --language en --file data/sources/contract_act_excerpt.txt
+```
+
+6. Run development servers:
 
 ```bash
 pnpm dev

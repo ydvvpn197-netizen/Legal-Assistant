@@ -1,11 +1,13 @@
 "use client";
 import { useState } from 'react';
+import LanguageToggle from '../../components/LanguageToggle';
 
 export default function ChatPage() {
   const [query, setQuery] = useState('');
   const [answer, setAnswer] = useState<string | null>(null);
   const [citations, setCitations] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [lang, setLang] = useState<'en' | 'hi'>(() => (typeof window !== 'undefined' ? ((localStorage.getItem('lang') as 'en' | 'hi') || 'en') : 'en'));
   const [error, setError] = useState<string | null>(null);
 
   async function onAsk(e: React.FormEvent) {
@@ -18,7 +20,7 @@ export default function ChatPage() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({ query, language: lang })
       });
       if (!res.ok) throw new Error('Request failed');
       const data = await res.json();
@@ -34,6 +36,18 @@ export default function ChatPage() {
   return (
     <div>
       <h2>Chat</h2>
+      <div style={{ marginBottom: 12 }}>
+        <LanguageToggle />
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        <label>
+          Current language
+          <select value={lang} onChange={(e) => setLang(e.target.value as 'en' | 'hi')} style={{ marginLeft: 8 }}>
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+          </select>
+        </label>
+      </div>
       <form onSubmit={onAsk} style={{ display: 'flex', gap: 8 }}>
         <input
           value={query}

@@ -23,6 +23,46 @@ enum Role {
   ADMIN
 }
 
+model RagSource {
+  id        String       @id @default(cuid())
+  slug      String       @unique
+  title     String
+  url       String?
+  language  LanguageCode @default(en)
+  chunks    RagChunk[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model RagChunk {
+  id        String    @id @default(cuid())
+  source    RagSource @relation(fields: [sourceId], references: [id])
+  sourceId  String
+  order     Int       @default(0)
+  text      String
+  embedding Float[]
+  tokens    Int?
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  @@index([sourceId, order])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  action     String
+  route      String?
+  ip         String?
+  userAgent  String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}
+
 enum LanguageCode {
   en
   hi

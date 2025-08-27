@@ -18,6 +18,7 @@ export default function Nav() {
       <Link href="/checklists" style={linkStyle}>Checklists</Link>
       <Link href="/chat" style={linkStyle}>Chat</Link>
       <Link href="/documents/nda" style={linkStyle}>NDA</Link>
+      <Link href="/summaries" style={linkStyle}>Summaries</Link>
       <Link href="/auth/login" style={linkStyle}>Login</Link>
       <Link href="/auth/register" style={linkStyle}>Register</Link>
       <Link href="/auth/me" style={linkStyle}>Me</Link>

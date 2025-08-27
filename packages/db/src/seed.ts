@@ -52,6 +52,30 @@ async function main() {
     checklists: 1,
     checklistItems: gst.items.length,
   });
+
+  // Seed RAG sources
+  const sources = [
+    { slug: 'contract-act-1872', title: 'Indian Contract Act, 1872', language: 'en' as const },
+    { slug: 'gst-act', title: 'GST Act and Rules', language: 'en' as const }
+  ];
+  for (const s of sources) {
+    const src = await prisma.ragSource.upsert({ where: { slug: s.slug }, update: {}, create: s });
+    const paragraphs = [
+      'A contract requires offer, acceptance, lawful consideration, competency of parties, and free consent.',
+      'GST registration is required above threshold turnover and for inter-state taxable supplies.'
+    ];
+    let idx = 0;
+    const { embed } = await import('@legalassistant/ai');
+    for (const p of paragraphs) {
+      const emb = embed(p);
+      await prisma.ragChunk.upsert({
+        where: { id: `${src.id}-${idx}` },
+        update: { text: p, order: idx, embedding: emb },
+        create: { id: `${src.id}-${idx}`, sourceId: src.id, text: p, order: idx, embedding: emb }
+      });
+      idx++;
+    }
+  }
 }
 
 main()

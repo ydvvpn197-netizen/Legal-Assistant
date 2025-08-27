@@ -13,6 +13,13 @@ export default async function MePage() {
         <div>
           <p><strong>Email:</strong> {user.email}</p>
           <p><strong>Name:</strong> {user.name || '-'}</p>
+          <form action="/api/me" method="post" onSubmit={async (e) => {
+            e.preventDefault();
+            await fetch('/api/me', { method: 'DELETE' });
+            window.location.href = '/';
+          }}>
+            <button type="submit" style={{ marginTop: 12 }}>Delete my account</button>
+          </form>
         </div>
       ) : (
         <p>Not logged in.</p>

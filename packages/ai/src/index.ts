@@ -1,29 +1,33 @@
-export type RetrievalResult = {
-  text: string;
-  source: string;
-};
+export type RetrievalResult = { text: string; source: string; score?: number };
+import { getPrismaClient } from '@legalassistant/db';
+import { embed, cosineSim } from './embeddings';
+export { embed, cosineSim } from './embeddings';
 
-const seedCorpus: RetrievalResult[] = [
-  {
-    text: 'Under the Indian Contract Act, 1872, a contract requires offer, acceptance, lawful consideration and free consent.',
-    source: 'Indian Contract Act, 1872'
-  },
-  {
-    text: 'GST registration is mandatory if annual aggregate turnover exceeds the threshold prescribed by law.',
-    source: 'GST Act and Rules'
-  }
-];
-
-export async function retrieveRelevant(query: string): Promise<RetrievalResult[]> {
-  const q = query.toLowerCase();
-  return seedCorpus.filter((r) => r.text.toLowerCase().includes(q)).slice(0, 3);
+export async function retrieveRelevant(query: string, language: 'en' | 'hi' = 'en'): Promise<RetrievalResult[]> {
+  const prisma = getPrismaClient();
+  const qv = embed(query);
+  const chunks = await prisma.ragChunk.findMany({
+    take: 100,
+    orderBy: { createdAt: 'desc' },
+    include: { source: true }
+  });
+  const scored = chunks
+    .filter((c) => c.source.language === language)
+    .map((c) => {
+      const score = cosineSim(qv, c.embedding as unknown as number[]);
+      return { text: c.text, source: c.source.title, score } as RetrievalResult;
+    })
+    .sort((a, b) => (b.score || 0) - (a.score || 0))
+    .slice(0, 5);
+  return scored;
 }
 
-export async function answerWithCitations(query: string): Promise<{ answer: string; citations: RetrievalResult[] }> {
-  const hits = await retrieveRelevant(query);
+export async function answerWithCitations(query: string, language: 'en' | 'hi' = 'en') {
+  const hits = await retrieveRelevant(query, language);
   const base = hits.length
     ? `Here is general information related to your query: ${hits.map((h) => h.text).join(' ')}`
     : `I can provide general legal information. Please share more specifics.`;
   const disclaimer = ' This is general information, not a substitute for legal advice. Consult a licensed advocate for specific matters.';
   return { answer: base + disclaimer, citations: hits };
 }
+export { summarize } from './summarize';

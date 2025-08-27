@@ -30,6 +30,13 @@ function verifyJwt(token: string, secret: string): any | null {
 export async function authRoutes(app: FastifyInstance) {
   const prisma = getPrismaClient();
   const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
+  app.addHook('preHandler', async (req) => {
+    const cookie = (req.headers['cookie'] || '').split(';').find((c) => c.trim().startsWith('auth='));
+    if (!cookie) return;
+    const token = cookie.split('=')[1];
+    const payload = verifyJwt(token, JWT_SECRET);
+    if (payload) (req as any).userId = payload.sub;
+  });
 
   app.post('/auth/register', async (req) => {
     const schema = z.object({ email: z.string().email(), password: z.string().min(6), name: z.string().optional() });
