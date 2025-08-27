@@ -1,5 +1,6 @@
+import { apiBase } from '../../lib/api';
 async function fetchChecklists() {
-  const res = await fetch('http://localhost:3000/api/checklists', { cache: 'no-store' });
+  const res = await fetch(`${apiBase}/checklists`);
   if (!res.ok) throw new Error('Failed to fetch checklists');
   return res.json();
 }
@@ -12,7 +13,7 @@ export default async function ChecklistsPage() {
       <ul>
         {checklists.map((c: any) => (
           <li key={c.id}>
-            <a href={`/checklists/${c.slug}`}>{c.name}</a>
+            <a href={`/checklists/view?slug=${encodeURIComponent(c.slug)}`}>{c.name}</a>
           </li>
         ))}
       </ul>

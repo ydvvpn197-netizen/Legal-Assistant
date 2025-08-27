@@ -1,5 +1,6 @@
+import { apiBase } from '../lib/api';
 async function fetchDocs() {
-  const res = await fetch('http://localhost:3000/api/documents', { cache: 'no-store' });
+  const res = await fetch(`${apiBase}/documents`);
   if (!res.ok) throw new Error('Failed');
   return res.json();
 }

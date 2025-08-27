@@ -4,14 +4,11 @@ const nextConfig = {
   experimental: {
     typedRoutes: true
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:4000/:path*'
-      }
-    ];
-  }
+  // Enable static export for GitHub Pages
+  output: 'export',
+  trailingSlash: true,
+  // Optional: set basePath at build time for project pages (e.g., '/repo-name')
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || undefined
 };
 
 export default nextConfig;

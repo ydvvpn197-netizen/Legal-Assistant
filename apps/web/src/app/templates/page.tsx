@@ -1,5 +1,6 @@
+import { apiBase } from '../../lib/api';
 async function fetchTemplates() {
-  const res = await fetch('http://localhost:3000/api/templates', { cache: 'no-store' });
+  const res = await fetch(`${apiBase}/templates`);
   if (!res.ok) throw new Error('Failed to fetch templates');
   return res.json();
 }

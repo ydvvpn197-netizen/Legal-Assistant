@@ -1,5 +1,6 @@
+import { apiBase } from '../../../lib/api';
 async function fetchMe() {
-  const res = await fetch('http://localhost:3000/api/auth/me', { cache: 'no-store' });
+  const res = await fetch(`${apiBase}/auth/me`);
   if (!res.ok) throw new Error('Failed');
   return res.json();
 }
