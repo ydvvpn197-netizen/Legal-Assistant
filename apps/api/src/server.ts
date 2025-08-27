@@ -11,8 +11,11 @@ import { authRoutes } from './routes/auth';
 import { documentRoutes } from './routes/documents';
 import { getPrismaClient } from '@legalassistant/db';
 import { auditPlugin } from './plugins/audit';
+import { sessionPlugin } from './plugins/session';
 import { privacyRoutes } from './routes/privacy';
 import { summariesRoutes } from './routes/summaries';
+import { billingRoutes } from './routes/billing';
+import { adminRoutes } from './routes/admin';
 
 async function start() {
   const app = Fastify({ logger: true });
@@ -23,6 +26,7 @@ async function start() {
     credentials: true
   });
   await app.register(multipart);
+  await app.register(sessionPlugin);
   await app.register(auditPlugin);
 
   // DB test route
@@ -41,6 +45,8 @@ async function start() {
   await app.register(documentRoutes);
   await app.register(privacyRoutes);
   await app.register(summariesRoutes);
+  await app.register(billingRoutes);
+  await app.register(adminRoutes);
 
   app.get('/db-check', async () => {
     // Lightweight query; introspects if DB is reachable

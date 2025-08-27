@@ -7,8 +7,15 @@ export async function templateRoutes(app: FastifyInstance) {
   app.get('/templates', async (req) => {
     const { language } = (req.query ?? {}) as { language?: string };
     const where = language ? { language } : {};
+    const userId = (req as any).userId as string | undefined;
+    let plan: 'FREE' | 'PRO' = 'FREE';
+    if (userId) {
+      const user = await prisma.user.findUnique({ where: { id: userId }, select: { plan: true } });
+      plan = (user?.plan as any) || 'FREE';
+    }
     const templates = await prisma.legalTemplate.findMany({ where, orderBy: { name: 'asc' } });
-    return { templates };
+    const filtered = plan === 'PRO' ? templates : templates.filter((t) => !t.isPremium);
+    return { templates: filtered };
   });
 
   app.get('/templates/:slug', async (req) => {

@@ -13,14 +13,22 @@ model User {
   name      String?
   passwordHash String?
   role      Role     @default(USER)
+  plan      Plan     @default(FREE)
+  planUpdatedAt DateTime? 
   emailVerifiedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  documents Document[]
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+enum Plan {
+  FREE
+  PRO
 }
 
 model RagSource {
@@ -63,6 +71,36 @@ model AuditLog {
   @@index([action, createdAt])
 }
 
+enum DocumentType {
+  NDA
+  RENT_AGREEMENT
+  EMPLOYMENT_OFFER
+  TERMINATION_NOTICE
+  FOUNDERS_AGREEMENT
+  PRIVACY_POLICY
+}
+
+enum DocumentFormat {
+  PDF
+  DOCX
+}
+
+model Document {
+  id        String          @id @default(cuid())
+  user      User?           @relation(fields: [userId], references: [id])
+  userId    String?
+  type      DocumentType
+  format    DocumentFormat
+  filePath  String
+  createdAt DateTime        @default(now())
+}
+
+model FeatureFlag {
+  key       String   @id
+  enabled   Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+}
+
 enum LanguageCode {
   en
   hi
@@ -84,6 +122,7 @@ model LegalTemplate {
   category  TemplateCategory
   language  LanguageCode     @default(en)
   bodyMd    String
+  isPremium Boolean          @default(false)
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 }

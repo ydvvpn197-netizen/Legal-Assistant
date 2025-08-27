@@ -76,6 +76,29 @@ async function main() {
       idx++;
     }
   }
+
+  // Premium template
+  await prisma.legalTemplate.upsert({
+    where: { slug: 'founders-agreement-en' },
+    update: { isPremium: true },
+    create: {
+      slug: 'founders-agreement-en',
+      name: 'Founders’ Agreement (EN)',
+      category: 'FOUNDERS_AGREEMENT',
+      language: 'en',
+      isPremium: true,
+      bodyMd: '# Founders’ Agreement\n\nGeneral information only. Consult an advocate.'
+    }
+  });
+
+  // Admin user
+  const adminEmail = 'admin@example.com';
+  const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
+  if (!existingAdmin) {
+    const crypto = await import('crypto');
+    const passwordHash = crypto.createHash('sha256').update('admin123').digest('hex');
+    await prisma.user.create({ data: { email: adminEmail, name: 'Admin', passwordHash, role: 'ADMIN', plan: 'PRO' } });
+  }
 }
 
 main()

@@ -10,3 +10,4 @@ dist
 coverage
 .prisma
 pnpm-lock.yaml
+storage

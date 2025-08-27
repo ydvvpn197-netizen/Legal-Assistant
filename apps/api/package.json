@@ -19,9 +19,11 @@
     "@legalassistant/db": "workspace:*",
     "@legalassistant/ai": "workspace:*",
     "@legalassistant/docgen": "workspace:*",
+    "@legalassistant/storage": "workspace:*",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
     "pdf-parse": "^1.1.1",
+    "razorpay": "^2.9.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {

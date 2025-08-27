@@ -72,6 +72,6 @@ export async function authRoutes(app: FastifyInstance) {
     if (!payload) return { user: null };
     const user = await prisma.user.findUnique({ where: { id: payload.sub } });
     if (!user) return { user: null };
-    return { user: { id: user.id, email: user.email, name: user.name } };
+    return { user: { id: user.id, email: user.email, name: user.name, role: user.role, plan: user.plan } };
   });
 }

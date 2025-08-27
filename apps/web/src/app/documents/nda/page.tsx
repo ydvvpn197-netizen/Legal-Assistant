@@ -31,6 +31,29 @@ export default function NdaWizard() {
     }
   }
 
+  async function onGenerateDocx(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch('/api/documents/nda.docx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ partyAName, partyBName, effectiveDate, termMonths })
+      });
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'nda.docx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div>
       <h2>NDA Generator</h2>
@@ -51,7 +74,10 @@ export default function NdaWizard() {
           Term (months)
           <input type="number" value={termMonths} onChange={(e) => setTermMonths(parseInt(e.target.value, 10) || 0)} style={{ width: '100%', padding: 8 }} />
         </label>
-        <button type="submit" disabled={loading}>{loading ? 'Generating…' : 'Generate PDF'}</button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit" disabled={loading}>{loading ? 'Generating…' : 'Generate PDF'}</button>
+          <button onClick={onGenerateDocx} disabled={loading} type="button">{loading ? 'Generating…' : 'Generate DOCX'}</button>
+        </div>
       </form>
     </div>
   );
