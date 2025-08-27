@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Legal Assistant Mobile",
+    "slug": "legal-assistant-mobile",
+    "scheme": "legalassistant",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "sdkVersion": "51.0.0"
+  }
+}

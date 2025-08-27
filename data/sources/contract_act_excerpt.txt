@@ -1,0 +1,5 @@
+Under the Indian Contract Act, 1872, a contract is an agreement enforceable by law. Essential elements include offer and acceptance, lawful consideration, competency of parties, free consent, and lawful object.
+
+An agreement not enforceable by law is void. Certain agreements are expressly declared void, including agreements in restraint of marriage, trade, and legal proceedings, and agreements by way of wager.
+
+Consent is said to be free when it is not caused by coercion, undue influence, fraud, misrepresentation, or mistake. If consent is not free, the contract is voidable at the option of the party whose consent was so caused.

@@ -1,0 +1,26 @@
+{
+  "name": "legal-assistant",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write .",
+    "postinstall": "pnpm db:generate",
+    "db:generate": "pnpm -F @legalassistant/db prisma generate",
+    "db:migrate": "pnpm -F @legalassistant/db prisma migrate dev",
+    "db:push": "pnpm -F @legalassistant/db prisma db push",
+    "db:seed": "pnpm -F @legalassistant/db seed"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "turbo": "^2.0.6",
+    "typescript": "^5.5.4"
+  }
+}

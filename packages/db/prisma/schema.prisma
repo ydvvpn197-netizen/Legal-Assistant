@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  passwordHash String?
+  role      Role     @default(USER)
+  plan      Plan     @default(FREE)
+  planUpdatedAt DateTime? 
+  emailVerifiedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  documents Document[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+model RagSource {
+  id        String       @id @default(cuid())
+  slug      String       @unique
+  title     String
+  url       String?
+  language  LanguageCode @default(en)
+  chunks    RagChunk[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model RagChunk {
+  id        String    @id @default(cuid())
+  source    RagSource @relation(fields: [sourceId], references: [id])
+  sourceId  String
+  order     Int       @default(0)
+  text      String
+  embedding Float[]
+  tokens    Int?
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  @@index([sourceId, order])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  action     String
+  route      String?
+  ip         String?
+  userAgent  String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}
+
+enum DocumentType {
+  NDA
+  RENT_AGREEMENT
+  EMPLOYMENT_OFFER
+  TERMINATION_NOTICE
+  FOUNDERS_AGREEMENT
+  PRIVACY_POLICY
+}
+
+enum DocumentFormat {
+  PDF
+  DOCX
+}
+
+model Document {
+  id        String          @id @default(cuid())
+  user      User?           @relation(fields: [userId], references: [id])
+  userId    String?
+  type      DocumentType
+  format    DocumentFormat
+  filePath  String
+  createdAt DateTime        @default(now())
+}
+
+model FeatureFlag {
+  key       String   @id
+  enabled   Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+}
+
+enum LanguageCode {
+  en
+  hi
+}
+
+enum TemplateCategory {
+  NDA
+  RENT_AGREEMENT
+  EMPLOYMENT_OFFER
+  TERMINATION_NOTICE
+  FOUNDERS_AGREEMENT
+  PRIVACY_POLICY
+}
+
+model LegalTemplate {
+  id        String           @id @default(cuid())
+  name      String
+  slug      String           @unique
+  category  TemplateCategory
+  language  LanguageCode     @default(en)
+  bodyMd    String
+  isPremium Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+enum ChecklistCategory {
+  GST
+  SHOPS_AND_ESTABLISHMENTS
+  LABOR
+}
+
+model ComplianceChecklist {
+  id        String            @id @default(cuid())
+  slug      String            @unique
+  name      String
+  category  ChecklistCategory
+  items     ChecklistItem[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model ChecklistItem {
+  id          String               @id @default(cuid())
+  checklist   ComplianceChecklist  @relation(fields: [checklistId], references: [id])
+  checklistId String
+  text        String
+  guidance    String
+  order       Int                  @default(0)
+}
